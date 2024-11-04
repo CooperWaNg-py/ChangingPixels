@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Animated Random Color Pixels</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas");
+        const context = canvas.getContext("2d");
+
+        // Set the canvas size to the window size
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Function to generate a random color
+        function randomColor() {
+            return Math.floor(Math.random() * 256);
+        }
+
+        // Draw random colors for each pixel
+        function drawRandomColors() {
+            const imageData = context.createImageData(canvas.width, canvas.height);
+            for (let i = 0; i < imageData.data.length; i += 4) {
+                imageData.data[i] = randomColor();     // Red
+                imageData.data[i + 1] = randomColor(); // Green
+                imageData.data[i + 2] = randomColor(); // Blue
+                imageData.data[i + 3] = 255;           // Alpha (fully opaque)
+            }
+            context.putImageData(imageData, 0, 0);
+        }
+
+        // Function to animate the colors
+        function animate() {
+            drawRandomColors();
+            requestAnimationFrame(animate);
+        }
+
+        animate(); // Start the animation
+
+        // Redraw if the window is resized
+        window.addEventListener("resize", () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
