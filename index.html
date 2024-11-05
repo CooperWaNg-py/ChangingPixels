@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Adjustable Speed Random Color Blocks</title>
+    <title>Broken Computer Prank</title>
     <style>
         body {
             margin: 0;
@@ -9,6 +9,9 @@
         }
         canvas {
             display: block;
+            position: absolute; /* Make canvas cover the entire screen */
+            top: 0;
+            left: 0;
         }
     </style>
 </head>
@@ -18,15 +21,18 @@
         const canvas = document.getElementById("canvas");
         const context = canvas.getContext("2d");
 
-        // Set the canvas size to the window size
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
         // Size of the color blocks
         const blockSize = 3; // Change this for different block sizes
+        let isBlackAndWhite = false; // Track if the screen should be black and white
 
         // Speed variable in milliseconds (e.g., 1000 ms = 1 second)
         const updateSpeed = 10; // Adjust this value to change the speed
+
+        // Function to resize the canvas to fullscreen
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
 
         // Function to draw random color blocks using ImageData
         function drawRandomBlocks() {
@@ -36,9 +42,17 @@
 
             for (let y = 0; y < height; y += blockSize) {
                 for (let x = 0; x < width; x += blockSize) {
-                    const red = Math.floor(Math.random() * 256);
-                    const green = Math.floor(Math.random() * 256);
-                    const blue = Math.floor(Math.random() * 256);
+                    let red = Math.floor(Math.random() * 256);
+                    let green = Math.floor(Math.random() * 256);
+                    let blue = Math.floor(Math.random() * 256);
+
+                    // If in black and white mode, calculate average color
+                    if (isBlackAndWhite) {
+                        const average = (red + green + blue) / 3;
+                        red = average;
+                        green = average;
+                        blue = average;
+                    }
 
                     // Fill each blockSize x blockSize area with the same color
                     for (let dy = 0; dy < blockSize; dy++) {
@@ -62,13 +76,21 @@
             setTimeout(animate, updateSpeed); // Control the animation speed
         }
 
-        animate(); // Start the animation
+        // Start animation and resize the canvas
+        function start() {
+            resizeCanvas();
+            animate();
+        }
+
+        // Toggle black and white on click
+        canvas.addEventListener("click", () => {
+            isBlackAndWhite = !isBlackAndWhite; // Toggle the state
+        });
+
+        start(); // Start the animation
 
         // Redraw if the window is resized
-        window.addEventListener("resize", () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
+        window.addEventListener("resize", resizeCanvas);
     </script>
 </body>
 </html>
